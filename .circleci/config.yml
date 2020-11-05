@@ -52,14 +52,7 @@ jobs:
           key: yarn-cache{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
-  e2e:
-    docker:
-      - image: "circleci/node:12"
-      - image: "circleci/postgres:9.6.2-alpine"
-        environment:
-          POSTGRES_USER: lamya-ray
-          POSTGRES_DB: testci
-          POSTGRES_PASSWORD: testci1
+  
     steps:
       - checkout
       - restore_cache:
@@ -67,7 +60,7 @@ jobs:
       - run:
           command: yarn test:e2e
           environment:
-            DATABASE_URL: postgres://lamya-ray:testci1@localhost:5432/testci
+            DATABASE_URL: postgres://lamya-ray:testci1@localhost:5432/postgres
             JWT_SECRET: m1iii
             API_PORT: 3000
             API_HOST: localhost
@@ -76,6 +69,14 @@ jobs:
           key: yarn-cache{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
+            e2e:
+    docker:
+      - image: "circleci/node:12"
+      - image: "circleci/postgres:9.6.2-alpine"
+        environment:
+          POSTGRES_USER: lamya-ray
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: testci1
   doc:
     docker:
       - image: "circleci/node:12"
